@@ -1,1 +1,1 @@
-FROM ghcr.io/swgoh-utils/swgoh-comlink:latest
+FROM ghcr.io/swgoh-utils/swgoh-comlink:2.1.0
