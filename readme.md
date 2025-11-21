@@ -1,69 +1,53 @@
 # Deploying to Heroku with Docker
 
-This project uses a custom Dockerfile. To deploy it to Heroku using Heroku's Container Registry, follow these steps:
+This project uses a custom Dockerfile and is automatically deployed to Heroku using GitHub Actions.
 
 ---
 
-## 1. Prerequisites
+## Automated Deployment
 
-- You need a Heroku account.
-- Install the [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli).
-- Install [Docker](https://docs.docker.com/get-docker/).
+Deployment is handled automatically by GitHub Actions. Every push to the `main` branch will trigger a deployment to Heroku.
 
----
+### Initial Setup (One-time)
 
-## 2. Log in to Heroku and Container Registry
+1. **Get your Heroku API Key:**
+   - Go to https://dashboard.heroku.com/account
+   - Or run locally: `heroku auth:token`
 
-```sh
-heroku login
-heroku container:login
-```
+2. **Add the API Key to GitHub Secrets:**
+   - Go to your GitHub repository
+   - Navigate to **Settings** → **Secrets and variables** → **Actions**
+   - Click **New repository secret**
+   - Name: `HEROKU_API_KEY`
+   - Value: Your Heroku API key
+   - Click **Add secret**
 
----
+3. **Set Config Vars (if needed):**
+   If your app needs environment variables, set them in Heroku:
+   ```sh
+   heroku config:set VAR_NAME=value -a grakchawwaa-swgoh-comlink
+   ```
 
-## 3. Create a Heroku App
+### How It Works
 
-This app has already been created and is called `grakchawwaa-swgoh-comlink`.
-
----
-
-## 4. Build and Push Your Docker Image
-
-From your project directory (where your Dockerfile is):
-
-```sh
-heroku container:push web -a grakchawwaa-swgoh-comlink
-```
-
----
-
-## 5. Release the Image
-
-```sh
-heroku container:release web -a grakchawwaa-swgoh-comlink
-```
+- **Automatic:** Pushes to `main` branch automatically trigger deployment
+- **Manual:** You can also manually trigger deployments from the **Actions** tab in GitHub
+- The workflow builds your Docker image and deploys it to the Heroku app `grakchawwaa-swgoh-comlink`
 
 ---
 
-## 6. Open Your App
+## Heroku App
 
+This app is deployed to: `grakchawwaa-swgoh-comlink`
+
+To open your app:
 ```sh
 heroku open -a grakchawwaa-swgoh-comlink
 ```
 
 ---
 
-## 7. (Optional) Set Config Vars
-
-If your app needs environment variables, set them with:
-
-```sh
-heroku config:set VAR_NAME=value -a grakchawwaa-swgoh-comlink
-```
-
----
-
-### Notes
+## Notes
 
 - Heroku expects your container to start a web process (i.e., listen on `$PORT`). If the base image you're using does not do this, you may need to add a `CMD` or `ENTRYPOINT` in your Dockerfile or override it in a `heroku.yml`.
 - If you need to expose a port, make sure your app listens on the port specified by the `$PORT` environment variable (Heroku sets this automatically).
